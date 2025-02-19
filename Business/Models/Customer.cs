@@ -5,6 +5,6 @@ public class Customer
     public int Id { get; set; }
     public string CustomerName { get; set; } = null!;
     public string Email { get; set; } = null!;
-    public List<Project> Projects { get; set; } = [];
+    public IEnumerable<Project> Projects { get; set; } = [];
 }
 
