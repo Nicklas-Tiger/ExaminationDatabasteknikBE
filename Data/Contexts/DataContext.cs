@@ -26,6 +26,21 @@ public class DataContext : DbContext
     public DbSet<Entities.ProjectManagerEntity> ProjectManagers { get; set; } = null!;
     public DbSet<Entities.ServiceEntity> Services { get; set; } = null!;
     public DbSet<Entities.StatusEntity> Statuses { get; set; } = null!;
-    public DbSet<Entities.TaskEntity> Tasks { get; set; } = null!;  
+    public DbSet<Entities.TaskEntity> Tasks { get; set; } = null!;
 
+    // CHATGPT hjälpte med detta då jag inte fick någon annan status än 0...
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Entities.ProjectEntity>()
+            .HasOne(p => p.Status)
+            .WithMany(s => s.Projects)
+            .HasForeignKey(p => p.StatusId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Entities.ProjectEntity>()
+            .HasOne(p => p.Customer)
+            .WithMany(c => c.Projects)
+            .HasForeignKey(p => p.CustomerId)
+            .OnDelete(DeleteBehavior.Restrict);
+    }
 }

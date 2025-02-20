@@ -18,15 +18,23 @@ public class ProjectService(IProjectRepository projectRepository, ICustomerRepos
     }
     public async Task<bool> CreateProjectAsync(ProjectRegistrationForm form)
     {
+        // Kontrollera om CustomerId och StatusId är giltiga
         if (!await _customerRepository.ExistsAsync(customer => customer.Id == form.CustomerId))
             return false;
 
+        // Här kollar vi även om StatusId är giltigt
+        if (form.StatusId < 1)
+            return false;
+
+        // Skapa ProjectEntity och mappa StatusId korrekt
         var projectEntity = ProjectFactory.Create(form);
         if (projectEntity == null)
             return false;
 
+        projectEntity.StatusId = form.StatusId;  // Mappa StatusId här!
+
         bool result = await _projectRepository.AddAsync(projectEntity);
         return result;
-
     }
+
 }

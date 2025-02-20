@@ -9,20 +9,24 @@ public static class ProjectFactory
     {
         ProjectName = form.ProjectName,
         Description = form.Description,
-        CustomerId = form.CustomerId
+        CustomerId = form.CustomerId,
+        StatusId = form.StatusId
+       
     };
 
     public static Project? Create(ProjectEntity entity)
     {
         if (entity == null)
             return null;
+
         var project = new Project
         {
             Id = entity.Id,
             ProjectName = entity.ProjectName,
-            Description = entity.Description
+            Description = entity.Description,
+            StatusId = entity.StatusId  // Lägg till detta!
         };
-        
+
         if (entity.Customer != null)
         {
             project.Customer = new Customer
@@ -32,6 +36,13 @@ public static class ProjectFactory
                 Email = entity.Customer.Email
             };
         }
+
+        if (entity.Status != null)
+        {
+            project.StatusName = entity.Status.StatusName;  // Mappa StatusName här!
+        }
+
         return project;
     }
+
 }

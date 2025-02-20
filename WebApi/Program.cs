@@ -1,37 +1,24 @@
 using Business.Interfaces;
 using Business.Services;
 using Data.Contexts;
-using Data.Entities;
 using Data.Interfaces;
 using Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-
 builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 builder.Services.AddOpenApi();
 
 builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer(builder.Configuration.GetConnectionString("LocalDB")));
 
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
-
-
-builder.Services.AddScoped<BaseRepository<CustomerAddressEntity>>();
-builder.Services.AddScoped<BaseRepository<CustomerContactEntity>>();
-builder.Services.AddScoped<BaseRepository<CustomerEntity>>();
-builder.Services.AddScoped<BaseRepository<CustomerTypeEntity>>();
-builder.Services.AddScoped<BaseRepository<DocumentEntity>>();
-builder.Services.AddScoped<BaseRepository<EmployeeEntity>>();
-builder.Services.AddScoped<BaseRepository<MeetingEntity>>();
-builder.Services.AddScoped<BaseRepository<NoteEntity>>();
-builder.Services.AddScoped<BaseRepository<PostalCodeEntity>>();
-builder.Services.AddScoped<BaseRepository<ProjectEntity>>();
-builder.Services.AddScoped<BaseRepository<ProjectHistoryEntity>>();
-builder.Services.AddScoped<BaseRepository<ProjectManagerEntity>>();
-builder.Services.AddScoped<BaseRepository<ServiceEntity>>();
-builder.Services.AddScoped<BaseRepository<StatusEntity>>();
-builder.Services.AddScoped<BaseRepository<TaskEntity>>();
+builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+builder.Services.AddScoped<IProjectManagerRepository, ProjectManagerRepository>();
+builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
+builder.Services.AddScoped<IStatusRepository, StatusRepository>();
 
 
 builder.Services.AddScoped<ICustomerService, CustomerService>();
@@ -42,11 +29,34 @@ builder.Services.AddScoped<IServiceService, ServiceService>();
 builder.Services.AddScoped<IStatusCodeService, StatusCodeService>();
 
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5174") // Exakt URL för React-appen
+                  .AllowAnyHeader()
+                  .AllowAnyMethod()
+                  .AllowCredentials();
+        });
+});
 
 
 var app = builder.Build();
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "Web API v1");
+        options.RoutePrefix = "swagger";
+    });
+}
+
 app.MapOpenApi();
 app.UseHttpsRedirection();
+
+app.UseCors("AllowReactApp");
 app.UseAuthorization();
 app.MapControllers();
 

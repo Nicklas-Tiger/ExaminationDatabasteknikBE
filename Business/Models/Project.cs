@@ -7,4 +7,5 @@ public class Project
     public string? Description { get; set; }
     public Customer Customer { get; set; } = null!;
     public int StatusId { get; set; }
+    public string? StatusName { get; set; }
 }
