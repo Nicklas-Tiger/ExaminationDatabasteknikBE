@@ -9,6 +9,8 @@ public static class ProjectFactory
     {
         ProjectName = form.ProjectName,
         Description = form.Description,
+        StartDate = form.StartDate, 
+        EndDate = form.EndDate,
         CustomerId = form.CustomerId,
         StatusId = form.StatusId
        
@@ -24,7 +26,9 @@ public static class ProjectFactory
             Id = entity.Id,
             ProjectName = entity.ProjectName,
             Description = entity.Description,
-            StatusId = entity.StatusId  // Lägg till detta!
+            StartDate = entity.StartDate,
+            EndDate = entity.EndDate,
+            StatusId = entity.StatusId 
         };
 
         if (entity.Customer != null)
@@ -39,7 +43,7 @@ public static class ProjectFactory
 
         if (entity.Status != null)
         {
-            project.StatusName = entity.Status.StatusName;  // Mappa StatusName här!
+            project.StatusName = entity.Status.StatusName;  
         }
 
         return project;

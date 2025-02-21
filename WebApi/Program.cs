@@ -28,13 +28,12 @@ builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<IServiceService, ServiceService>();
 builder.Services.AddScoped<IStatusCodeService, StatusCodeService>();
 
-
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp",
         policy =>
         {
-            policy.WithOrigins("http://localhost:5174") // Exakt URL för React-appen
+            policy.WithOrigins("http://localhost:5173") // Exakt URL för React-appen
                   .AllowAnyHeader()
                   .AllowAnyMethod()
                   .AllowCredentials();
@@ -55,7 +54,6 @@ if (app.Environment.IsDevelopment())
 
 app.MapOpenApi();
 app.UseHttpsRedirection();
-
 app.UseCors("AllowReactApp");
 app.UseAuthorization();
 app.MapControllers();

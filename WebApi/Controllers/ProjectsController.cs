@@ -31,6 +31,15 @@ public class ProjectsController(IProjectService projectService) : ControllerBase
         return Ok(projects);
     }
 
+    //HÄR SKA OCKSÅ IN SEN
+    //[HttpGet("{id}")]
+    //public async Task<IActionResult> Get(int id)
+    //{
+    //    var project = await _projectService.GetProjectAsync(id);
+    //    if (project == null)
+    //        return NotFound();
+    //    return Ok(project);
+ }
 
-}
+
 
