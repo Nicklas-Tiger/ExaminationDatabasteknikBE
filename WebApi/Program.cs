@@ -33,7 +33,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowReactApp",
         policy =>
         {
-            policy.WithOrigins("http://localhost:5173") // Exakt URL för React-appen
+            policy.WithOrigins("http://localhost:5174")
                   .AllowAnyHeader()
                   .AllowAnyMethod()
                   .AllowCredentials();
@@ -54,8 +54,17 @@ if (app.Environment.IsDevelopment())
 
 app.MapOpenApi();
 app.UseHttpsRedirection();
+app.UseRouting();
 app.UseCors("AllowReactApp");
+app.UseHttpsRedirection();
 app.UseAuthorization();
+
+app.Use(async (context, next) =>
+{
+    Console.WriteLine($"Request Path: {context.Request.Path}");
+    await next.Invoke();
+});
+
 app.MapControllers();
 
 app.Run();

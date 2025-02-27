@@ -1,6 +1,5 @@
 ﻿using Business.Interfaces;
 using Business.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers;
@@ -15,12 +14,12 @@ public class ProjectsController(IProjectService projectService) : ControllerBase
     public async Task<IActionResult> Create(ProjectRegistrationForm form)
     {
         if (!ModelState.IsValid && form.CustomerId < 1)
-            return BadRequest();
+            return BadRequest(ModelState);
 
         var result = await _projectService.CreateProjectAsync(form);
         if (result)
             return CreatedAtAction(nameof(GetAll), null);
-        return StatusCode(500, "Fel när projektet skapades.");
+        return StatusCode(500);
     }
 
 
@@ -31,15 +30,35 @@ public class ProjectsController(IProjectService projectService) : ControllerBase
         return Ok(projects);
     }
 
-    //HÄR SKA OCKSÅ IN SEN
-    //[HttpGet("{id}")]
-    //public async Task<IActionResult> Get(int id)
-    //{
-    //    var project = await _projectService.GetProjectAsync(id);
-    //    if (project == null)
-    //        return NotFound();
-    //    return Ok(project);
- }
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetProject(int id)
+    {
+        var project = await _projectService.GetProjectAsync(id);
+        return project != null ? Ok(project) : NotFound();
+    }
+
+    [HttpPut]
+    public async Task<IActionResult> UpdateProject(Project project)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+        var updated = await _projectService.UpdateProjectAsync(project);
+        return updated ? Ok() : BadRequest();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteProject(int id)
+    {
+        var project = await _projectService.GetProjectAsync(id);
+        if (project == null)
+            return NotFound();
+
+        var deleted = await _projectService.DeleteProjectAsync(project);
+        return deleted ? Ok() : BadRequest();
+    }
+
+
+}
 
 
 

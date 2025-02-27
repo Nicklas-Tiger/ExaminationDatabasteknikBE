@@ -11,7 +11,7 @@ public class StatusesController(IStatusCodeService statusCodeService) : Controll
     private readonly IStatusCodeService _statusCodeService = statusCodeService;
 
     [HttpGet]
-    public async Task<IActionResult> GetStatusesAsync()
+    public async Task<IActionResult> GetAll()
     {
         var statuses = await _statusCodeService.GetStatusesAsync();
         return Ok(statuses);
