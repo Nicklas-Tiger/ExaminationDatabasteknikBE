@@ -32,24 +32,23 @@ public static class ProjectFactory
 
     };
 
-    public static ProjectEntity Map(Project project)
+    public static ProjectEntity Map(ProjectUpdateForm form)
     {
         try
         {
-
-            ArgumentNullException.ThrowIfNull(project);
+            ArgumentNullException.ThrowIfNull(form);
 
             var entity = new ProjectEntity
             {
-                Id = project.Id,
-                ProjectName = project.ProjectName,
-                Description = project.Description,
-                StartDate = project.StartDate,
-                EndDate = project.EndDate,
-                CustomerId = project.Customer?.Id ?? 0, 
-                StatusId = project.Status?.Id ?? 0,     
-                ProjectManagerId = project.ProjectManager?.Id ?? 0, 
-                ServiceId = project.Service?.Id ?? 0    
+                Id = form.Id,
+                ProjectName = form.ProjectName,
+                Description = form.Description,
+                StartDate = form.StartDate,
+                EndDate = form.EndDate,
+                CustomerId = form.CustomerId,     
+                StatusId = form.StatusId,           
+                ProjectManagerId = form.ProjectManagerId, 
+                ServiceId = form.ServiceId       
             };
             return entity;
         }
@@ -59,4 +58,5 @@ public static class ProjectFactory
             return null!;
         }
     }
+
 }
